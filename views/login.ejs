@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head') %>
+    <link href="/css/login.css" rel="stylesheet">
+    <title>Welcome to Xperi Solutions</title>
+</head>
+<body>
+    <div class="login-card">
+        <h1>Welcome to Xperi Solutions</h1>
+        <p class="subtitle">Please sign in to continue</p>
+        
+        <% if (locals.messages && messages.error) { %>
+            <div class="alert alert-danger" role="alert">
+                <%= messages.error %>
+            </div>
+        <% } %>
+        
+        <button id="loginButton" class="google-btn">
+            <img src="https://www.google.com/favicon.ico" alt="Google" class="google-icon">
+            Sign in with Google
+        </button>
+    </div>
+    <script src="/js/login.js" type="module"></script>
+    <script src="/js/auth.js" type="module"></script>
+</body>
+</html>

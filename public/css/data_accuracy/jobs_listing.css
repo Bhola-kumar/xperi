@@ -1,0 +1,63 @@
+.jobs-container {
+  padding: 2rem;
+}
+
+.filter-section {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.jobs-table {
+  scroll-behavior: smooth;
+}
+
+.job-row {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.job-row.locked {
+  cursor: not-allowed;
+  background-color: rgba(220, 53, 69, 0.05);
+}
+
+.job-row.loading {
+  position: relative;
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.job-row.locked:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+.job-row:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.refresh-btn {
+  min-width: 120px;
+}
+
+.refresh-btn .spinner-border {
+  display: none;
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15em;
+}
+
+.refresh-btn.loading .spinner-border {
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+.page-size-select {
+  width: auto;
+  display: inline-block;
+}
+
+.pagination-info {
+  color: #6c757d;
+}

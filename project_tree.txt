@@ -1,0 +1,89 @@
+﻿consolidated-user-interface
+|   data
+|   |   data_accuracy
+|   +-- master_source_list.parquet
+|   devops
+|   |   scripts
+|   |   +-- .version
+|   |   +-- add_semantic_ver_tag.sh
+|   |   +-- tree_view_powershell.ps1
+|   logger
+|   +-- logger.js
+|   logs
+|   public
+|   |   css
+|   |   |   common
+|   |   |   +-- loading_overlay.css
+|   |   |   +-- main.css
+|   |   |   +-- navbar.css
+|   |   |   data_accuracy
+|   |   |   +-- comparison.css
+|   |   |   +-- jobs_listing.css
+|   |   |   landing_page
+|   |   |   +-- main.css
+|   |   +-- app-switcher.css
+|   |   +-- login.css
+|   |   +-- not_implemented.css
+|   |   images
+|   |   |   icons
+|   |   |   +-- apps.svg
+|   |   |   +-- chat.svg
+|   |   |   +-- dashboard.svg
+|   |   |   +-- mail.svg
+|   |   |   +-- qa.svg
+|   |   |   +-- transform.svg
+|   |   |   +-- tv.svg
+|   |   |   +-- validation.svg
+|   |   +-- straive_fav_icon.png
+|   |   js
+|   |   |   config
+|   |   |   +-- endpoints.js
+|   |   |   data_accuracy
+|   |   |   +-- comparison.js
+|   |   |   +-- jobs_listing.js
+|   |   |   services
+|   |   |   +-- apiService.js
+|   |   +-- app-switcher.js
+|   |   +-- auth.js
+|   |   +-- config.js
+|   |   +-- login.js
+|   |   +-- not_implemented.js
+|   +-- robots.txt
+|   routes
+|   |   auth
+|   |   +-- config.js
+|   |   data_accuracy
+|   |   +-- comparison.js
+|   |   +-- jobs.js
+|   |   +-- sources.js
+|   views
+|   |   data_accuracy
+|   |   |   comparison
+|   |   |   +-- error.ejs
+|   |   |   +-- index.ejs
+|   |   |   jobs_listing
+|   |   |   +-- error.ejs
+|   |   |   +-- index.ejs
+|   |   landing_page
+|   |   +-- main.ejs
+|   |   partials
+|   |   +-- app_switcher.ejs
+|   |   +-- data_load_error_modal.ejs
+|   |   +-- error.ejs
+|   |   +-- head.ejs
+|   |   +-- loading_overlay.ejs
+|   |   +-- navbar.ejs
+|   +-- login.ejs
+|   +-- not_implemented.ejs
++-- .eslintrc.yml
++-- .htmlhintrc
++-- .stylelintrc.yml
++-- app.js
++-- babel.config.js
++-- CHANGELOG.md
++-- jest.config.js
++-- package-lock.json
++-- package.json
++-- README.md
++-- RELEASE.md
+

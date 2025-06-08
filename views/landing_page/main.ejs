@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+    <link href="/css/landing_page/main.css" rel="stylesheet">
+    <title>Xperi Solutions Dashboard</title>
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Mail Management Engine -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Mail Management Engine</h5>
+                        <p class="card-text">Automated system for processing channel manager emails and managing daily communications with Xperi contacts.</p>
+                        <a href="/mail-management" class="btn btn-primary mt-auto">Access System</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preprocessing Engine -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Preprocessing Engine: Transformers</h5>
+                        <p class="card-text">Transform various input formats into standardized XML format for efficient processing.</p>
+                        <a href="/preprocessing" class="btn btn-primary mt-auto">Access System</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TV Metadata Matching Engine -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">TV Metadata Matching Engine</h5>
+                        <p class="card-text">Automated system for matching incoming program records with Xperi's program database.</p>
+                        <a href="/matching" class="btn btn-primary mt-auto">Access System</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QA Engine -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">QA Engine</h5>
+                        <p class="card-text">Quality assurance system for comparing program lineups and generating metrics.</p>
+                        <a href="/data-accuracy/jobs" class="btn btn-primary mt-auto">Access System</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Validation Engine -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Report Validation Engine</h5>
+                        <p class="card-text">Automated system for validating various daily and weekly reports.</p>
+                        <a href="/validation" class="btn btn-primary mt-auto">Access System</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Assistant -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Chat Assistant</h5>
+                        <p class="card-text">AI-powered assistant for help with Xperi solutions and processes.</p>
+                        <a href="/virtual-assistant" class="btn btn-primary mt-auto">Open Chat</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { authorizeUser } from '/js/auth.js';
+        // Update welcome message with authorized user's email
+        authorizeUser().then(email => {
+            if (email) {
+                document.getElementById('welcomeMessage').textContent = `Welcome, ${email}`;
+            }
+        });
+    </script>
+</body>
+</html>

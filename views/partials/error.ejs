@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./head') %>
+  </head>
+  <body>
+    <div class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-body text-center p-4">
+              <h1 class="h3 text-danger mb-4"><%= title %></h1>
+              <p class="lead mb-4"><%= message %></p>
+              <p class="text-muted small">
+                You will be redirected to dashboard in
+                <span id="countdown">3</span> seconds...
+              </p>
+              <% if (process.env.NODE_ENV === 'development' && error.stack) { %>
+              <div class="alert alert-danger text-start">
+                <pre class="mb-0"><code><%= error.stack %></code></pre>
+              </div>
+              <% } %>
+              <a href="/dashboard" class="btn btn-primary"
+                >Return to Dashboard</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      let count = 3;
+      const countdown = document.getElementById("countdown");
+      const timer = setInterval(() => {
+        count--;
+        countdown.textContent = count;
+        if (count <= 0) {
+          clearInterval(timer);
+          window.location.href = "/dashboard";
+        }
+      }, 1000);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../../partials/head') %>
+    <link rel="stylesheet" href="/css/common/loading_overlay.css" />
+    <link href="/css/data_accuracy/comparison.css" rel="stylesheet" />
+    <title>Data Accuracy Companion</title>
+  </head>
+  <body>
+    <%- include('../../partials/navbar') %> <%-
+    include('../../partials/loading_overlay') %> <%-
+    include('../../partials/data_load_error_modal') %>
+
+    <div class="main-container">
+      <!-- Charts Column -->
+      <div class="charts-column">
+        <div class="header-section">
+          <div class="row">
+            <div class="col-12">
+              <h1>Data Accuracy</h1>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="source-info">
+                <span id="sourceId"></span>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-6">
+              <button id="completeJobBtn" class="btn btn-success">
+                <i class="bi bi-check-circle me-1"></i>Complete Job
+              </button>
+            </div>
+            <div class="col-6">
+              <button id="unlockJobBtn" class="btn btn-warning">
+                <i class="bi bi-unlock me-1"></i>Unlock Job
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Analysis Section -->
+        <div class="analysis-section mt-1">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <button class="btn btn-outline-primary btn-sm" id="viewConfig">
+              <i class="bi bi-gear"></i>
+              <span class="ms-1">View Details</span>
+            </button>
+          </div>
+          <!-- Original Analysis -->
+          <div class="analysis-card mb-1">
+            <h3>Original LLM-Powered QA Scores</h3>
+            <div class="chart-container">
+              <div class="chart-score">
+                <div class="value" id="originalQAScore">0.00%</div>
+                <span class="label">QA Score</span>
+              </div>
+              <div class="chart-visualization">
+                <div id="originalPieChart"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Updated Analysis -->
+          <div class="analysis-card">
+            <h3>Updated Human-in-Loop QA Scores</h3>
+            <div class="chart-container">
+              <div class="chart-score">
+                <div class="value" id="updatedQAScore">0.00%</div>
+                <span class="label">QA Score</span>
+              </div>
+              <div class="chart-visualization">
+                <div id="updatedPieChart"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Records Column -->
+      <div class="records-column mt-1 p-1">
+        <!-- Records Section -->
+        <div class="records-section">
+          <!-- Filter Container -->
+          <div class="filter-container p-1">
+            <div
+              class="filter-header d-flex align-items-center justify-content-between"
+            >
+              <h6 class="mb-0">Filter Records</h6>
+              <div class="d-flex align-items-center gap-3">
+                <button
+                  class="btn btn-outline-secondary btn-sm"
+                  id="resetFilters"
+                >
+                  <i class="bi bi-arrow-counterclockwise"></i>
+                  <span class="ms-1">Reset</span>
+                </button>
+                <button
+                  class="btn btn-link btn-sm text-decoration-none p-0"
+                  id="toggleFilters"
+                >
+                  <i class="bi bi-funnel"></i>
+                  <span class="ms-1">Show Filters</span>
+                </button>
+              </div>
+            </div>
+            <div class="filter-body collapse" id="filterBody">
+              <div class="filter-options">
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="filterMatch"
+                    value="match"
+                    checked
+                  />
+                  <label class="form-check-label" for="filterMatch">
+                    <span class="badge bg-success">Match</span>
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="filterAlmostMatch"
+                    value="almost_identical_match"
+                    checked
+                  />
+                  <label class="form-check-label" for="filterAlmostMatch">
+                    <span class="badge bg-warning">Almost Identical Match</span>
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="filterMismatch"
+                    value="mismatch"
+                    checked
+                  />
+                  <label class="form-check-label" for="filterMismatch">
+                    <span class="badge bg-danger">Mismatch</span>
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="filterAdded"
+                    value="added"
+                    checked
+                  />
+                  <label class="form-check-label" for="filterAdded">
+                    <span class="badge bg-info">Added</span>
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="filterDeleted"
+                    value="deleted"
+                    checked
+                  />
+                  <label class="form-check-label" for="filterDeleted">
+                    <span class="badge bg-secondary">Deleted</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Records Container -->
+          <div id="recordsContainer" class="mt-3"></div>
+
+          <!-- No More Records Message -->
+          <div id="noMoreRecords" class="text-center mt-4 d-none">
+            <p class="text-muted">No more records to load</p>
+          </div>
+        </div>
+      </div>
+      <!-- Comment Modal -->
+      <div
+        class="modal fade"
+        id="commentModal"
+        tabindex="-1"
+        aria-labelledby="commentModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="commentModalLabel">Add Comment</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div class="comment-section">
+                <textarea
+                  class="form-control comment-box"
+                  rows="4"
+                  placeholder="Add your comments here (max 300 characters)"
+                  maxlength="300"
+                ></textarea>
+                <small class="character-count">0/300</small>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
+              <button type="button" class="btn btn-primary save-comment">
+                Save Comment
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Record Template -->
+    <template id="recordTemplate">
+      <div class="comparison-card">
+        <div class="card">
+          <div class="card-header bg-dark">
+            <div class="row align-items-center w-100 m-0">
+              <div class="col-4 px-0">
+                <h6 class="mb-0 text-light">
+                  Record {index} of {total} | {broadcast_datetime}
+                </h6>
+              </div>
+              <div class="col-4 px-0 text-center">
+                <div
+                  class="record-navigation d-inline-flex align-items-center justify-content-center bg-dark"
+                >
+                  <button
+                    class="btn btn-link btn-sm text-light p-1 me-1 bg-dark"
+                    title="First Record"
+                    data-action="first"
+                  >
+                    <i class="bi bi-chevron-double-left"></i>
+                  </button>
+                  <button
+                    class="btn btn-link btn-sm text-light p-1 me-1 bg-dark"
+                    title="Previous Record"
+                    data-action="prev"
+                  >
+                    <i class="bi bi-chevron-left"></i>
+                  </button>
+                  <button
+                    class="btn btn-link btn-sm text-light p-1 ms-1 bg-dark"
+                    title="Next Record"
+                    data-action="next"
+                  >
+                    <i class="bi bi-chevron-right"></i>
+                  </button>
+                  <button
+                    class="btn btn-link btn-sm text-light p-1 ms-1 bg-dark"
+                    title="Last Record"
+                    data-action="last"
+                  >
+                    <i class="bi bi-chevron-double-right"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="col-4 px-0 text-end">
+                <span class="similarity-badge"></span>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <h5 class="h5">Provider Record</h5>
+                <div class="record-card provider-record"></div>
+              </div>
+              <div class="col-md-6">
+                <h5 class="h5">Cosmo Record</h5>
+                <div class="record-card cosmo-record"></div>
+              </div>
+            </div>
+            <div class="qa-review" id="qa_review">
+              <div class="modal-content">
+                <h5>QA Review</h5>
+                <p class="similarity-info">
+                  SIMILARITY INDEX: <span class="similarity-index">0.00</span>
+                </p>
+                <p class="similarity-reason"></p>
+                <div class="btn-container">
+                  <button class="btn-accept thumbs-up">Accept</button>
+                  <button class="btn-reject thumbs-down">Reject</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- Error Modal -->
+    <div
+      class="modal fade"
+      id="errorModal"
+      tabindex="-1"
+      aria-labelledby="errorModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="errorModalLabel">Error</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p id="errorMessage"></p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Complete Job Confirmation Modal -->
+    <div
+      class="modal fade"
+      id="completeJobModal"
+      tabindex="-1"
+      aria-labelledby="completeJobModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="completeJobModalLabel">Complete Job</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>
+              Are you sure you want to complete this job? This action cannot be
+              undone.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-success"
+              id="confirmCompleteBtn"
+            >
+              <i class="bi bi-check-circle me-1"></i>Complete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unlock Job Modal -->
+    <div
+      class="modal fade"
+      id="unlockModal"
+      tabindex="-1"
+      aria-labelledby="unlockModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="unlockModalLabel">Unlock Job</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>
+              Are you sure you want to unlock this job? This will allow other
+              users to review it.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="button" class="btn btn-warning" id="confirmUnlockBtn">
+              <i class="bi bi-unlock me-1"></i>Unlock
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lock Modal -->
+    <div
+      class="modal fade"
+      id="lockModal"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="lockModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="lockModalLabel">
+              <i class="bi bi-lock-fill text-danger me-2"></i
+              ><strong>Job Locked!</strong>
+            </h5>
+          </div>
+          <div class="modal-body">
+            <p id="lockModalMessage"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Configuration Modal -->
+    <div
+      class="modal fade"
+      id="configModal"
+      tabindex="-1"
+      aria-labelledby="configModalLabel"
+      aria-hidden="true"
+    >
+      <div
+        class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="configModalLabel">
+              Source Configuration Details
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- Tabs Navigation -->
+            <ul class="nav nav-tabs" id="configTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link active"
+                  id="accuracy-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#accuracy-content"
+                  type="button"
+                  role="tab"
+                  aria-controls="accuracy-content"
+                  aria-selected="true"
+                >
+                  Accuracy Score Calculation Configuration
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link"
+                  id="date-range-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#date-range-content"
+                  type="button"
+                  role="tab"
+                  aria-controls="date-range-content"
+                  aria-selected="false"
+                >
+                  QA Date Range
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link"
+                  id="comparison-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#comparison-content"
+                  type="button"
+                  role="tab"
+                  aria-controls="comparison-content"
+                  aria-selected="false"
+                >
+                  Comparison Configuration
+                </button>
+              </li>
+            </ul>
+
+            <!-- Tabs Content -->
+            <div class="tab-content pt-3" id="configTabsContent">
+              <div class="d-flex justify-content-end mb-2">
+                <button
+                  class="btn btn-outline-secondary btn-sm"
+                  id="copyConfig"
+                >
+                  <i class="bi bi-clipboard"></i>
+                  <span class="ms-1">Copy to Clipboard</span>
+                </button>
+              </div>
+              <!-- Tab 1: Accuracy Score Calculation Configuration -->
+              <div
+                class="tab-pane fade show active"
+                id="accuracy-content"
+                role="tabpanel"
+                aria-labelledby="accuracy-tab"
+              >
+                <div class="config-container">
+                  <pre
+                    class="config-json"
+                  ><code id="configDataQAScoreCalc"></code></pre>
+                </div>
+              </div>
+
+              <!-- Tab 2: QA Date Range -->
+              <div
+                class="tab-pane fade"
+                id="date-range-content"
+                role="tabpanel"
+                aria-labelledby="date-range-tab"
+              >
+                <div class="qa-date-range-container">
+                  <!-- Content for QA Date Range tab goes here -->
+                  <pre
+                    class="config-json"
+                  ><code id="configDataQADateRange"></code></pre>
+                </div>
+              </div>
+
+              <!-- Tab 3: Comparison Configuration -->
+              <div
+                class="tab-pane fade"
+                id="comparison-content"
+                role="tabpanel"
+                aria-labelledby="comparison-tab"
+              >
+                <div class="comparison-config-container">
+                  <!-- Content for Comparison Configuration tab goes here -->
+                  <pre
+                    class="config-json"
+                  ><code id="configDataComparisonConfiguration"></code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+      import { initializeComparison } from "/js/data_accuracy/comparison.js";
+
+      // Initialize the comparison module directly
+      // The module will handle its own authorization
+      document.addEventListener("DOMContentLoaded", () => {
+        initializeComparison();
+      });
+    </script>
+  </body>
+</html>

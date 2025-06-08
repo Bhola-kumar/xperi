@@ -1,0 +1,80 @@
+/* Landing page specific styles */
+body {
+  background-color: #f0f2f5;
+}
+
+.card {
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  height: 100%;
+  background: #ffffff;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background-color: #fafbfc;
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+.card-title {
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.card-text {
+  color: #6c757d;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.btn-primary {
+  width: 100%;
+  margin-top: auto;
+  padding: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+  background-color: #5a6268;
+  border-color: #5a6268;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+  background-color: #4a4f53;
+  border-color: #4a4f53;
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  background-color: #404448;
+  border-color: #404448;
+  transform: translateY(0);
+}
+
+/* Container spacing */
+.container {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card {
+    margin-bottom: 1rem;
+  }
+
+  .card-body {
+    padding: 1.5rem;
+  }
+}
